@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مدرسة الشهيد ياسين - بني حماد</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Tajawal;}
+body{background:#f2f6ff;overflow-x:hidden;}
+header{background:#0a2a66;color:white;padding:25px 20px;text-align:center;position:relative;}
+.header-main{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;}
+header h1{font-size:26px;font-weight:bold;margin-top:10px;text-align:center;}
+.eagle{width:70px;height:auto;}
+.side-text{position:absolute;right:15px;top:15px;font-size:12px;line-height:1.6;}
+.menu-btn{position:absolute;left:20px;top:20px;font-size:26px;cursor:pointer;}
+.exit-btn{position:absolute;right:20px;top:15px;background:#e53935;color:white;padding:12px 22px;border-radius:25px;font-size:16px;cursor:pointer;font-weight:bold;z-index:1001;display:none;}
+.sidebar{position:fixed;left:-260px;top:0;width:260px;height:100%;background:#102d6b;color:white;padding-top:80px;z-index:1000;}
+.sidebar a{display:block;padding:15px;color:white;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.2);}
+.sidebar a:hover{background:#1a3c8f;}
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:url("https://upload.wikimedia.org/wikipedia/commons/8/89/Flag_of_Yemen.svg") no-repeat center;background-size:420px;text-align:center;}
+.hero h2{background:rgba(255,255,255,0.9);padding:20px 40px;border-radius:15px;color:#0a2a66;font-size:24px;margin-bottom:20px;}
+.section{display:none;padding:20px;min-height:100vh;}
+table{width:100%;border-collapse:collapse;margin-top:15px;}
+table,th,td{border:1px solid #0a2a66;padding:8px;text-align:center;}
+textarea,input,select{width:100%;padding:10px;margin:8px 0;}
+.login-box{max-width:300px;margin:40px auto;background:white;padding:20px;border-radius:15px;box-shadow:0 5px 15px rgba(0,0,0,0.2);text-align:center;}
+.hero button, .section button {width:250px;padding:12px;margin:6px;border:none;border-radius:10px;background:#0a2a66;color:white;cursor:pointer;}
+</style>
+</head>
+<body onclick="closeMenuOutside(event)">
+
+<header>
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+<div class="exit-btn" onclick="goHome()">خروج</div>
+
+<div class="header-main">
+<img class="eagle" src="png.jpeg" alt="شعار الطير">
+<h1>مدرسة الشهيد ياسين - بني حماد</h1>
+</div>
+
+<div class="side-text">
+الجمهورية اليمنية<br>
+وزارة التربية والتعليم<br>
+مكتب التربية محافظة تعز
+</div>
+</header>
+
+<div class="sidebar" id="sidebar">
+<a href="#" onclick="goHome()">الصفحة الرئيسية</a>
+<a href="#" onclick="openSection('schedule')">جدول الحصص</a>
+<a href="#" onclick="openSection('books')">الكتب</a>
+<a href="#" onclick="openSection('summaries')">الملازم</a>
+<a href="#" onclick="openSection('results')">نتائج الطلاب</a>
+<a href="#" onclick="openSection('adminLogin')">لوحة الإدارة</a>
+</div>
+
+<div class="hero" id="home" style="display:flex;">
+<h2>مرحباً بكم في مدرسة الشهيد ياسين</h2>
+<button onclick="openSection('schedule')">جدول الحصص</button>
+<button onclick="openSection('books')">الكتب</button>
+<button onclick="openSection('summaries')">الملازم</button>
+<button onclick="openSection('results')">عرض النتائج</button>
+<button onclick="openSection('adminLogin')">لوحة الإدارة</button>
+</div>
+
+<!-- جدول الحصص -->
+<div class="section" id="schedule">
+<h2>جدول الحصص</h2>
+<div id="scheduleDisplay"></div>
+</div>
+
+<!-- الكتب -->
+<div class="section" id="books">
+<h2>كتب الجمهورية اليمنية</h2>
+<select id="classSelect" onchange="showBooks()">
+  <option value="">اختر الصف</option>
+  <option value="first">الصف الأول</option>
+  <option value="second">الصف الثاني</option>
+  <option value="third">الصف الثالث</option>
+  <option value="fourth">الصف الرابع</option>
+  <option value="fifth">الصف الخامس</option>
+  <option value="sixth">الصف السادس</option>
+  <option value="seventh">الصف السابع</option>
+  <option value="eighth">الصف الثامن</option>
+  <option value="ninth">الصف التاسع</option>
+  <option value="firstHigh">الأول الثانوي</option>
+  <option value="secondHigh">الثاني الثانوي</option>
+  <option value="thirdHigh">الثالث الثانوي</option>
+</select>
+<div id="booksList"></div>
+<button id="downloadAllBtn" style="display:none;" onclick="downloadAllBooks()">تحميل جميع كتب الصف</button>
+</div>
+
+<!-- الملازم -->
+<div class="section" id="summaries">
+<h2>الملازم والملخصات</h2>
+<select>
+<option>اختر الصف</option>
+<option>الصف الأول</option>
+<option>الصف الثاني</option>
+<option>الصف الثالث</option>
+<option>الصف الرابع</option>
+<option>الصف الخامس</option>
+<option>الصف السادس</option>
+<option>الصف السابع</option>
+<option>الصف الثامن</option>
+<option>الصف التاسع</option>
+<option>الأول الثانوي</option>
+<option>الثاني الثانوي</option>
+<option>الثالث الثانوي</option>
+</select>
+</div>
+
+<!-- عرض النتائج -->
+<div class="section" id="results">
+<h2>عرض النتائج</h2>
+<select id="studentClass">
+  <option value="">اختر الصف</option>
+  <option>الصف الأول</option>
+  <option>الصف الثاني</option>
+  <option>الصف الثالث</option>
+  <option>الصف الرابع</option>
+  <option>الصف الخامس</option>
+  <option>الصف السادس</option>
+  <option>الصف السابع</option>
+  <option>الصف الثامن</option>
+  <option>الصف التاسع</option>
+  <option>الأول الثانوي</option>
+  <option>الثاني الثانوي</option>
+  <option>الثالث الثانوي</option>
+</select>
+<input type="text" id="studentName" placeholder="اكتب اسم الطالب">
+<button onclick="showStudentResult()">عرض النتائج</button>
+<div id="resultsDisplay"></div>
+</div>
+
+<!-- تسجيل دخول الإدارة -->
+<div class="section" id="adminLogin">
+<div class="login-box">
+<h3>دخول الإدارة</h3>
+<input type="text" id="adminUser" placeholder="اسم المستخدم">
+<input type="password" id="adminPass" placeholder="كلمة المرور">
+<button onclick="login()">دخول</button>
+<p id="loginMsg"></p>
+</div>
+</div>
+
+<!-- لوحة الإدارة -->
+<div class="section" id="adminPanel">
+<h2>لوحة الإدارة</h2>
+<button onclick="openSection('uploadResults')">رفع نتائج CSV</button>
+<button onclick="openSection('changeSchedule')">تغيير الجدول</button>
+<button onclick="openSection('uploadBooks')">إضافة كتب PDF</button>
+</div>
+
+<!-- تغيير الجدول -->
+<div class="section" id="changeSchedule">
+<h2>تغيير الجدول</h2>
+<textarea id="scheduleInput" placeholder="اكتب الجدول هنا"></textarea>
+<button onclick="saveSchedule()">حفظ الجدول</button>
+<button onclick="deleteSchedule()">حذف الجدول</button>
+</div>
+
+<!-- رفع النتائج -->
+<div class="section" id="uploadResults">
+<h2>رفع نتائج الطلاب من ملف CSV</h2>
+<p>ملف CSV: صف,اسم الطالب,المادة,الدرجة لكل سطر</p>
+<input type="file" id="fileInput" accept=".csv">
+<button onclick="uploadCSV()">رفع الملف</button>
+</div>
+
+<!-- رفع الكتب PDF -->
+<div class="section" id="uploadBooks">
+<h2>إضافة كتب PDF لكل صف</h2>
+<select id="bookClassSelect">
+  <option value="">اختر الصف</option>
+  <option value="first">الصف الأول</option>
+  <option value="second">الصف الثاني</option>
+  <option value="third">الصف الثالث</option>
+  <option value="fourth">الصف الرابع</option>
+  <option value="fifth">الصف الخامس</option>
+  <option value="sixth">الصف السادس</option>
+  <option value="seventh">الصف السابع</option>
+  <option value="eighth">الصف الثامن</option>
+  <option value="ninth">الصف التاسع</option>
+  <option value="firstHigh">الأول الثانوي</option>
+  <option value="secondHigh">الثاني الثانوي</option>
+  <option value="thirdHigh">الثالث الثانوي</option>
+</select>
+<input type="file" id="bookFile" accept=".pdf" multiple>
+<button onclick="uploadBook()">إضافة الكتاب</button>
+<div id="uploadMsg"></div>
+</div>
+
+<script>
+let allBooks = JSON.parse(localStorage.getItem("books")||"{}");
+
+function toggleMenu(){let s=document.getElementById("sidebar");s.style.left = (s.style.left=="0px") ? "-260px" : "0px";}
+function closeMenuOutside(e){let sidebar=document.getElementById("sidebar");if(e.target.closest(".sidebar")==null && e.target.closest(".menu-btn")==null){sidebar.style.left="-260px";}}
+function openSection(id){
+    document.getElementById("home").style.display="none";
+    let sections=document.querySelectorAll(".section");
+    sections.forEach(sec=>sec.style.display="none");
+    document.getElementById(id).style.display="block";
+    document.querySelector(".exit-btn").style.display = "block"; // يظهر زر الخروج عند الدخول لأي بوبة
+    if(id==="schedule"){loadSchedule();}
+}
+function goHome(){
+    let sections=document.querySelectorAll(".section");
+    sections.forEach(sec=>sec.style.display="none");
+    document.getElementById("home").style.display="flex";
+    document.querySelector(".exit-btn").style.display = "none"; // يختفي في الصفحة الرئيسية
+}
+
+// دخول الإدارة
+function login(){
+    let user=document.getElementById("adminUser").value;
+    let pass=document.getElementById("adminPass").value;
+    if(user==="admin" && pass==="1234"){openSection("adminPanel");}else{document.getElementById("loginMsg").innerText="اسم المستخدم أو كلمة المرور خطأ";}
+}
+
+// جدول الحصص
+function saveSchedule(){let data=document.getElementById("scheduleInput").value;localStorage.setItem("schoolSchedule",data);alert("تم حفظ الجدول");loadSchedule();}
+function loadSchedule(){let data=localStorage.getItem("schoolSchedule");let display=document.getElementById("scheduleDisplay");if(!data){display.innerHTML="لا يوجد جدول";return;}let rows=data.split("\n");let table="<table><tr><th>اليوم</th><th>ح1</th><th>ح2</th><th>ح3</th></tr>";rows.forEach(r=>{let cols=r.split(",");table+="<tr>";cols.forEach(c=>table+="<td>"+c+"</td>");table+="</tr>";});table+="</table>";display.innerHTML=table;}
+function deleteSchedule(){localStorage.removeItem("schoolSchedule");document.getElementById("scheduleDisplay").innerHTML="تم حذف الجدول";}
+
+// عرض النتائج
+function sanitize(str){return str.replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function showStudentResult(){
+    let name=sanitize(document.getElementById("studentName").value.trim());
+    let cls=document.getElementById("studentClass").value;
+    let results=JSON.parse(localStorage.getItem("results")||"{}");
+    let display=document.getElementById("resultsDisplay");
+    display.innerHTML="";
+    if(!cls){display.innerHTML="<p>اختر الصف أولاً</p>"; return;}
+    if(!name){display.innerHTML="<p>اكتب اسم الطالب</p>"; return;}
+    if(results[cls] && results[cls][name]){
+        let subjects=results[cls][name];
+        let table="<table><tr><th>المادة</th><th>الدرجة</th></tr>";
+        for(let sub in subjects){table+="<tr><td>"+sanitize(sub)+"</td><td>"+sanitize(subjects[sub])+"</td></tr>";}
+        table+="</table>";
+        display.innerHTML="الصف: "+cls+"<br>"+table;
+    } else {display.innerHTML="<p>لا توجد نتيجة لهذا الطالب في الصف المحدد</p>";}
+}
+
+// رفع CSV
+function uploadCSV(){
+    let file=document.getElementById("fileInput").files[0];
+    if(!file || !file.name.endsWith(".csv")){alert("اختر ملف CSV صالح");return;}
+    let reader=new FileReader();
+    reader.onload=function(e){
+        let text=e.target.result;
+        let lines=text.split("\n");
+        let results=JSON.parse(localStorage.getItem("results")||"{}");
+        lines.forEach(line=>{
+            let cols=line.trim().split(",");
+            if(cols.length===4){
+                let cls=sanitize(cols[0]),name=sanitize(cols[1]),subject=sanitize(cols[2]),score=sanitize(cols[3]);
+                if(!results[cls]) results[cls]={};
+                if(!results[cls][name]) results[cls][name]={};
+                results[cls][name][subject]=score;
+            }
+        });
+        localStorage.setItem("results",JSON.stringify(results));
+        alert("تم رفع النتائج بنجاح");
+    };
+    reader.readAsText(file);
+}
+
+// عرض الكتب
+function showBooks(){
+    const cls=document.getElementById("classSelect").value;
+    const div=document.getElementById("booksList");
+    const downloadBtn=document.getElementById("downloadAllBtn");
+    div.innerHTML="";
+    if(cls && allBooks[cls] && allBooks[cls].length>0){
+        allBooks[cls].forEach(book=>{
+            const btn=document.createElement("button");
+            btn.innerText=sanitize(book.name);
+            btn.onclick=()=>{window.open(book.file,"_blank");};
+            div.appendChild(btn);
+        });
+        downloadBtn.style.display="block";
+    } else {
+        div.innerHTML="لا توجد كتب لهذا الصف";
+        downloadBtn.style.display="none";
+    }
+}
+
+// تنزيل جميع كتب الصف دفعة واحدة
+function downloadAllBooks(){
+    const cls=document.getElementById("classSelect").value;
+    if(!cls || !allBooks[cls]) return;
+    allBooks[cls].forEach(book=>{
+        const a=document.createElement("a");
+        a.href=book.file;
+        a.download=book.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+}
+
+// رفع كتب PDF
+function uploadBook(){
+    const cls=document.getElementById("bookClassSelect").value;
+    const fileInput=document.getElementById("bookFile");
+    const files=fileInput.files;
+    const msg=document.getElementById("uploadMsg");
+    if(!cls){msg.innerText="اختر الصف"; return;}
+    if(!files.length){msg.innerText="اختر ملف PDF"; return;}
+    for(let i=0;i<files.length;i++){
+        const file=files[i];
+        if(!file.name.endsWith(".pdf")){msg.innerText="يجب أن تكون الملفات PDF"; continue;}
+        const reader=new FileReader();
+        reader.onload=function(e){
+            const fileURL=e.target.result;
+            if(!allBooks[cls]) allBooks[cls]=[];
+            allBooks[cls].push({name:file.name,file:fileURL});
+            localStorage.setItem("books",JSON.stringify(allBooks));
+        }
+        reader.readAsDataURL(file);
+    }
+    msg.innerText="تم إضافة الملفات بنجاح!";
+    fileInput.value="";
+}
+</script>
+</body>
+</html>
